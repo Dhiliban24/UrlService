@@ -3,9 +3,14 @@ package com.ctsproject.urlshortener.service;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Date;
 import java.util.Base64;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +25,9 @@ public class UrlShortenerServiceImpl implements UrlShorteningService {
 	@Autowired
 	UrlRepository urlRepository;
 	private  String answer="";
+
+	@PersistenceContext
+	private EntityManager entityManager;
 	public String shortUrl(String URL) {
 		
 		try {	
@@ -87,5 +95,18 @@ public class UrlShortenerServiceImpl implements UrlShorteningService {
 		// TODO Auto-generated method stub
 		return  urlRepository.findUrlsByUrlId(urlId);
 	}
+	@Override
+	public List<Urls> findTopUrlsByCount() {
+		
+		return entityManager.createQuery("select t from Urls t ORDER BY t.accessCount DESC",Urls.class)
+		.setMaxResults(10).getResultList();
+	}
+	@Override
+	public List<Urls> findRecentlyAddedUrlsByDate(Date date) {
+		return entityManager.createQuery("select r from Urls r ORDER BY r.creationDate DESC",Urls.class)
+		.setMaxResults(10).getResultList();
+		
+	}
+	
 
 }

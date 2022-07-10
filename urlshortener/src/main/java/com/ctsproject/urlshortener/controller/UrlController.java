@@ -1,5 +1,7 @@
 package com.ctsproject.urlshortener.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ctsproject.urlshortener.entity.Urls;
 import com.ctsproject.urlshortener.service.UrlShorteningService;
+
+
 
 @RestController
 @RequestMapping("urls")
@@ -51,4 +55,13 @@ public class UrlController {
 		return answer;
 	}	
 
+	@GetMapping("/topUrls")
+	public List<Urls>findTopUrls(){
+		return urlShorteningService.findTopUrlsByCount();
+	}
+
+	@GetMapping("/recentUrls")
+	public List<Urls>findRecentUrls(){
+		return urlShorteningService.findRecentlyAddedUrlsByDate();
+	}
 }
